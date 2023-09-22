@@ -1,24 +1,37 @@
-﻿namespace maui_example;
+﻿using maui_example.Base;
+using maui_example.ViewModels;
+
+namespace maui_example;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+    private readonly HomeViewModel _viewModel;
+    public MainPage()
+    {
+        _viewModel = ServiceHelper.GetService<HomeViewModel>();
+        InitializeComponent();
+        this.BindingContext = _viewModel;
+    }
 
-	public MainPage()
-	{
-		InitializeComponent();
-	}
+    private async void ImageButton_Clicked(object sender, EventArgs e)
+    {
+        var btn = sender as ImageButton;
+        if (string.IsNullOrEmpty(InputAjouterSite.Text)) return;
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		count++;
+        _viewModel.Sites.Add(new SiteData(InputAjouterSite.Text));
+        InputAjouterSite.Text = "";
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+        await btn.ScaleTo(0.8, 100, Easing.CubicOut);
+        await btn.ScaleTo(1, 100, Easing.CubicIn);
+    }
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+    private void RemoveItem_Tapped(object sender, TappedEventArgs e)
+    {
+        var item = sender as VisualElement;
+        var site = item.BindingContext as SiteData;
+
+        if (site == null) return;
+
+        _viewModel.Sites.Remove(site);
+    }
 }
-

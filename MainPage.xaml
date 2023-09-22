@@ -1,41 +1,89 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="maui_example.MainPage">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:viewmodels="clr-namespace:maui_example.ViewModels"
+    xmlns:acceuil="clr-namespace:maui_example.Views.Home"
+    x:DataType="viewmodels:HomeViewModel"
+    x:Class="maui_example.MainPage">
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource ColorDanger}" />
+        </Style>
 
-    <ScrollView>
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+        <DataTemplate x:Key="SiteTemplates">
+            <acceuil:SiteDisplay Data="{Binding .}" />
+        </DataTemplate>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="auto,*">
+        <Grid ColumnDefinitions="*,64">
+            <Entry
+                HeightRequest="50"
+                x:Name="InputAjouterSite"
+                Placeholder="https://"
+                VerticalOptions="Center">
+                <Entry.Behaviors>
+                    <toolkit:TextValidationBehavior
+                        x:Name="ValidationInputAddSite"
+                        InvalidStyle="{StaticResource InvalidEntryStyle}"
+                        Flags="ValidateOnValueChanged"
+                        RegexPattern="{Binding RegexWebSite}" />
+                </Entry.Behaviors>
+            </Entry>
+            <ImageButton
+                IsEnabled="{Binding IsValid, Source={x:Reference ValidationInputAddSite}}"
+                Grid.Column="1"
+                WidthRequest="32"
+                HeightRequest="32"
+                Clicked="ImageButton_Clicked">
+                <ImageButton.Source>
+                    <FontImageSource
+                        Glyph="&#xe710;"
+                        FontFamily="Segoe-Fluent-Icons"
+                        Color="{DynamicResource ColorDark}" />
+                </ImageButton.Source>
+            </ImageButton>
+        </Grid>
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+        <ListView
+            Grid.Row="1"
+            ItemsSource="{Binding Sites}"
+            HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodels:SiteData">
+                    <ViewCell>
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems>
+                                    <SwipeItemView>
+                                        <Border
+                                            Padding="10,6"
+                                            StrokeThickness="0"
+                                            BackgroundColor="{DynamicResource ColorDanger}">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="RemoveItem_Tapped" />
+                                            </Border.GestureRecognizers>
+                                            <VerticalStackLayout>
+                                                <Image HeightRequest="20">
+                                                    <Image.Source>
+                                                        <FontImageSource
+                                                            Glyph="&#xe74d;"
+                                                            FontFamily="Segoe-Fluent-Icons"
+                                                            Color="{DynamicResource ColorLight}" />
+                                                    </Image.Source>
+                                                </Image>
+                                                <Label Text="Supprimer" TextColor="{DynamicResource ColorLight}" />
+                                            </VerticalStackLayout>
+                                        </Border>
+                                    </SwipeItemView>
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <acceuil:SiteDisplay Data="{Binding .}" HeightRequest="60" />
+                        </SwipeView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
 </ContentPage>
