@@ -5,10 +5,14 @@ namespace maui_example.Views;
 
 public partial class ParametersPage : ContentPage
 {
-    private readonly HomeViewModel _viewModel;
-    public ParametersPage()
+    private readonly HomeViewModel _HomeViewModel;
+    private readonly ParametersViewModel _ParamsViewModel;
+
+    public ParametersPage(HomeViewModel homeViewModel, ParametersViewModel parametersViewModel)
     {
-        _viewModel = ServiceHelper.GetService<HomeViewModel>();
+        _HomeViewModel = homeViewModel;
+        _ParamsViewModel = parametersViewModel;
+        this.BindingContext = _ParamsViewModel;
         InitializeComponent();
     }
 
@@ -25,6 +29,6 @@ public partial class ParametersPage : ContentPage
 
     private void RemoveAll_Clicked(object sender, EventArgs e)
     {
-        _viewModel.Sites.Clear();
+        _HomeViewModel.Sites.Clear();
     }
 }

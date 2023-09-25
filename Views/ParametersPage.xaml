@@ -8,7 +8,7 @@
             <HorizontalStackLayout.GestureRecognizers>
                 <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
             </HorizontalStackLayout.GestureRecognizers>
-            <CheckBox IsChecked="False" VerticalOptions="Center" />
+            <CheckBox VerticalOptions="Center" IsChecked="{Binding IsOpenInBrowser}" />
             <Label Text="Open in navigator" VerticalOptions="Center" />
         </HorizontalStackLayout>
 

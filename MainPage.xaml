@@ -64,7 +64,7 @@
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="RemoveItem_Tapped" />
                                             </Border.GestureRecognizers>
-                                            <VerticalStackLayout>
+                                            <VerticalStackLayout VerticalOptions="Center">
                                                 <Image HeightRequest="20">
                                                     <Image.Source>
                                                         <FontImageSource
@@ -79,7 +79,7 @@
                                     </SwipeItemView>
                                 </SwipeItems>
                             </SwipeView.LeftItems>
-                            <acceuil:SiteDisplay Data="{Binding .}" HeightRequest="60" />
+                            <acceuil:SiteDisplay Data="{Binding}" HeightRequest="60" />
                         </SwipeView>
                     </ViewCell>
                 </DataTemplate>

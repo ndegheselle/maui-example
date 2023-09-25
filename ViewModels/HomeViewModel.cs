@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace maui_example.ViewModels
 {
@@ -24,5 +25,32 @@ namespace maui_example.ViewModels
     {
         public string RegexWebSite { get; set; } = @"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)";
         public ObservableCollection<SiteData> Sites { get; set; } = new ObservableCollection<SiteData>();
+
+        public HomeViewModel()
+        {
+            LoadSites();
+            Sites.CollectionChanged += (s, e) => SaveSites();
+        }
+
+        public event Action<string> OnOpenWebView;
+        public void OpenWebView(string url)
+        {
+            OnOpenWebView?.Invoke(url);
+        }
+
+        private void SaveSites()
+        {
+            Preferences.Set(nameof(Sites), String.Join(";", Sites.Select(x => x.Url)));
+        }
+
+        private void LoadSites()
+        {
+            var urls = Preferences.Get(nameof(Sites), "").Split(";", StringSplitOptions.RemoveEmptyEntries);
+            Sites.Clear();
+            foreach (var url in urls)
+            {
+                Sites.Add(new SiteData(url));
+            }
+        }
     }
 }
